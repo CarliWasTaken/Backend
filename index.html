@@ -1,0 +1,31 @@
+<html>
+<head>
+<title>Fuck CORS</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+$(document).ready(function() {
+
+	var socket = io.connect('http://127.0.0.1:5000');
+
+	socket.on('connect', function() {
+		socket.send('User has connected!');
+	});
+
+	socket.on('message', function(msg) {
+		console.log('Received message: '+msg);
+	});
+
+	$('#sendbutton').on('click', function() {
+		socket.send('yeet');
+	});
+
+});
+</script>
+<ul id="messages"></ul>
+<input type="text" id="myMessage">
+<button id="sendbutton">Send</button>
+</body>
+</html>

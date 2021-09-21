@@ -1,16 +1,21 @@
 from flask import Flask, Response
 import cv2
 import numpy as np
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, send
 import controls
 
 app = Flask(__name__)
 
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 if __name__ == '__main__':
     print("Starting server")
     socketio.run(app)
+
+@socketio.on('message')
+def handleMessage(msg):
+    print('Message: ' + msg)
+    send(msg, broadcast=True)
 
 @socketio.on('forward')
 def handle_message(data):
