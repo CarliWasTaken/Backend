@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        var socket = io('http://127.0.0.1:5000/drive');
+
+        document.addEventListener('keydown', (e) => {
+            if (!e.repeat) {
+                var key = e.key;
+                if (key == 'w') {
+                    socket.emit('forward', { data: 'pressed' });
+                } else if (key == 's') {
+                    socket.emit('backward', { data: 'pressed' });
+                } else if (key == 'a') {
+                    socket.emit('left', { data: 'pressed' });
+                } else if (key == 'd') {
+                    socket.emit('right', { data: 'pressed' });
+                }
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (!e.repeat) {
+                var key = e.key;
+                if (key == 'w') {
+                    socket.emit('forward', { data: 'released' });
+                } else if (key == 's') {
+                    socket.emit('back', { data: 'released' });
+                } else if (key == 'a') {
+                    socket.emit('left', { data: 'released' });
+                } else if (key == 'd') {
+                    socket.emit('right', { data: 'released' });
+                }
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <img src="http://localhost:5000/video">
+</body>
+
+</html>
