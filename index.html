@@ -39,11 +39,37 @@
                 }
             }
         });
+    
+        var streamSocket = io('http://localhost:5000/stream');
+        
+        streamSocket.emit('start_stream', { data: 'START!' });
+        
+        streamSocket.on('video', (data) => {
+            var arrayBufferView = new Uint8Array(data);
+            var blob = new Blob([arrayBufferView], {type: "image/jpeg"});
+            var urlCreator = window.webkitURL;
+            var url = urlCreator.createObjectURL(blob);
+            var img = document.getElementById('video');
+            img.src = url;
+            img.onload = e => URL.revokeObjectURL( url );
+        });
+        
+        streamSocket.on('ai', (data) => {
+            var arrayBufferView = new Uint8Array(data);
+            var blob = new Blob([arrayBufferView], {type: "image/jpeg"});
+            var urlCreator = window.webkitURL;
+            var url = urlCreator.createObjectURL(blob);
+            var img = document.getElementById('ai');
+            img.src = url;
+            img.onload = e => URL.revokeObjectURL( url );
+        });
+
     </script>
 </head>
 
 <body>
-    <img src="http://localhost:5000/video">
+    <img id ="video">
+    <img id ="ai">
 </body>
 
 </html>
