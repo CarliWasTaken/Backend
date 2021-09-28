@@ -31,7 +31,7 @@
                 if (key == 'w') {
                     socket.emit('forward', { data: 'released' });
                 } else if (key == 's') {
-                    socket.emit('back', { data: 'released' });
+                    socket.emit('backward', { data: 'released' });
                 } else if (key == 'a') {
                     socket.emit('left', { data: 'released' });
                 } else if (key == 'd') {
