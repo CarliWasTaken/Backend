@@ -4,8 +4,8 @@ import logging
 import controls
 import camera
 
-log = logging.getLogger('werkzeug')
-log.setLevel(logging.ERROR)
+# log = logging.getLogger('werkzeug')
+# log.setLevel(logging.ERROR)
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins='*')
 

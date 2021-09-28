@@ -5,22 +5,32 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Carli</title>
+    <link rel="stylesheet" href="index.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300&display=swap" rel="stylesheet">
     <script src="socket.io-1.2.0.js"></script>
     <script type="text/javascript" charset="utf-8">
-        var socket = io('http://192.168.0.100:5000/drive');
+        var socket = io('http://127.0.0.1:5000/drive');
 
         document.addEventListener('keydown', (e) => {
             if (!e.repeat) {
                 var key = e.key;
+                
                 if (key == 'w') {
                     socket.emit('forward', { data: 'pressed' });
+                    console.log('pressed: ' + key);
+                    document.getElementById(key).classList.add('key-pressed');
                 } else if (key == 's') {
                     socket.emit('backward', { data: 'pressed' });
+                    document.getElementById(key).classList.add('key-pressed');
                 } else if (key == 'a') {
                     socket.emit('left', { data: 'pressed' });
+                    document.getElementById(key).classList.add('key-pressed');
                 } else if (key == 'd') {
                     socket.emit('right', { data: 'pressed' });
+                    document.getElementById(key).classList.add('key-pressed');
                 }
             }
         });
@@ -30,12 +40,17 @@
                 var key = e.key;
                 if (key == 'w') {
                     socket.emit('forward', { data: 'released' });
+                    document.getElementById(key).classList.remove('key-pressed');
+                    console.log(key);
                 } else if (key == 's') {
                     socket.emit('backward', { data: 'released' });
+                    document.getElementById(key).classList.remove('key-pressed');
                 } else if (key == 'a') {
                     socket.emit('left', { data: 'released' });
+                    document.getElementById(key).classList.remove('key-pressed');
                 } else if (key == 'd') {
                     socket.emit('right', { data: 'released' });
+                    document.getElementById(key).classList.remove('key-pressed');
                 }
             }
         });
@@ -43,7 +58,52 @@
 </head>
 
 <body>
-    <img src="http://192.168.0.100:5000/video">
+    <h1>Carli</h1>
+    <div id="control">
+        
+    </div>
+    <div class="container-main">
+        <div class="image"><img src="http://127.0.0.1:5000/video"></div>
+        
+        <div class="control-panel">
+            
+            <!-- connect -->
+            <div class="control-panel-part">
+                <div class="connect-area">
+                    <h2>Connect</h2>
+                    <input id="address" type="text" placeholder="ip:port">
+                    <button id="connect">Connect</button>
+                </div>
+            </div>
+            
+
+            <!-- wasd -->
+            <div class="control-panel-part">
+                <div class="row">
+                    <div class="key" id="w">W</div>
+
+                </div>
+                <div class="row">
+                    <div class="key" id="a">A</div>
+                    <div class="key" id="s">S</div>
+                    <div class="key" id="d">D</div>
+
+                </div>
+            </div>
+
+            <!-- ai -->
+            <div class="control-panel-part">
+                <div class="ai-area">
+                    <h2>AI-Mode</h2>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </body>
 
 </html>
