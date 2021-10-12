@@ -25,7 +25,6 @@ while(True):
     clientMsg = message.decode('ascii')
     clientMsg = clientMsg.replace("'", "\"")
     data = json.loads(clientMsg)
-    #print(data)
     
     controls.steer(data['steer'])
-    #controls.drive(data['speed'])
+    controls.drive(data['speed'])

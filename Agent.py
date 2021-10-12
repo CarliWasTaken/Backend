@@ -34,7 +34,7 @@ class Servo():
         pass
 
 
-class AgendMoveController():
+class AgentMoveController():
     def __init__(self):
 
         self.__pwm = Adafruit_PCA9685.PCA9685()
@@ -62,10 +62,3 @@ class AgendMoveController():
     def scaleData(self, dataSet):
         return self.__servoMin + dataSet * (self.__servoMax - self.__servoMin)
         pass
-
-
-if __name__ == '__main__':
-    demo = AgendMoveController()
-    while True:
-        demo.servos["speed"].set_value(30)
-        demo.servos["steering"].set_value(1)
