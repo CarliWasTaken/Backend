@@ -4,8 +4,9 @@ agent = AgentMoveController()
 
 def steer(angle):
         angle = int((angle+127)/254*140)
-        demo.servos["steering"].set_value(angle)
+        agent.servos["steering"].set_value(angle)
 
 def drive(throttle):
-        throttle = int((throttle+127)/254)
-        demo.servos["speed"].set_value(throttle)
+        print(throttle)
+        throttle = int((throttle+127)/254*100)
+        agent.servos["speed"].set_value(throttle)
