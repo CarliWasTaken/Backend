@@ -1,32 +1,21 @@
-def forward(data):
-    print('FORWARD')
-    msg = data['data']
-    if(msg == 'pressed'):
-        print('Start')
-    elif(msg == 'released'):
-        print('Stop')
-
-def backward(data):
-    print('BACK')
-    msg = data['data']
-    if(msg == 'pressed'):
-        print('Start')
-    elif(msg == 'released'):
-        print('Stop')
-
-def left(data):
-    print('LEFT')
-    msg = data['data']
-    if(msg == 'pressed'):
-        print('Start')
-    elif(msg == 'released'):
-        print('Stop')
+from adafruit_servokit import ServoKit
+import time
 
 
-def right(data):
-    print('RIGHT')
-    msg = data['data']
-    if(msg == 'pressed'):
-        print('Start')
-    elif(msg == 'released'):
-        print('Stop')
+kit = ServoKit(channels=16)
+
+def steer(angle):
+        angle = int((angle+127)/254*140)
+        kit.servo[0].angle=angle
+
+def drive(throttle):
+        throttle = int((throttle+127)/254)
+        kit.continuous_servo[8].throttle=throttle
+
+
+
+def test():
+    for i in range(0,180,10):
+        print(i)
+        kit.servo[0].angle = i
+        time.sleep(0.5)
