@@ -1,13 +1,13 @@
+from log import Log
 import socket
 import json
 import controls
 
+log = Log.get_instance()
+
 localIP = "192.168.43.25"
 localPort = 20001
 bufferSize = 32
-
-msgFromServer = "Hello UDP Client"
-bytesToSend = str.encode(msgFromServer)
 
 # Create a datagram socket
 UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
@@ -15,7 +15,7 @@ UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 # Bind to address and ip
 UDPServerSocket.bind((localIP, localPort))
 
-print("UDP server up and listening")
+log.info("UDP server up and listening")
 
 # Listen for incoming datagrams
 while(True):
@@ -25,6 +25,9 @@ while(True):
     clientMsg = message.decode('ascii')
     clientMsg = clientMsg.replace("'", "\"")
     data = json.loads(clientMsg)
+    
+    # Log the movement data
+    log.move(data['speed'], data['steer'])
     
     controls.steer(data['steer'])
     controls.drive(data['speed'])
