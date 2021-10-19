@@ -1,4 +1,4 @@
-from Agent import AgentMoveController
+from agent import AgentMoveController
 import time
 from log import Log
 
