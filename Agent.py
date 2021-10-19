@@ -1,4 +1,7 @@
 import Adafruit_PCA9685
+from log import Log
+
+log = Log.get_instance()
 
 class Servo():
     def __init__(self, pwm, number, neutral, delta_max):
@@ -14,6 +17,7 @@ class Servo():
 
     # sets the servo to its neutral value
     def set_neutral(self):
+        log.info('Neutral')
         self.__pwm.set_pwm(self.__number, 0, self.__neutral)
         pass
 
@@ -29,6 +33,7 @@ class Servo():
 
     # sets the servo to a specific value
     def set_value(self, value):
+        log.info(str(self.__number)  + ': ' + str(self.__neutral + value))
         self.__pwm.set_pwm(self.__number, 0, self.__neutral + value)
         pass
 
@@ -37,8 +42,8 @@ class AgentMoveController():
     def __init__(self):
         self.__pwm = Adafruit_PCA9685.PCA9685()
         self.servos = {
-            "steering": Servo(self.__pwm, 0, 335, 40),
-            "speed": Servo(self.__pwm, 8, 370, 80),
+            "steering": Servo(self.__pwm, 0, 1200, 40),
+            "speed": Servo(self.__pwm, 8, 1200, 40),
         }
 
         self.reset_servos()
