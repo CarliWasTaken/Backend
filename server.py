@@ -7,6 +7,7 @@ from threading import Thread
 
 time_last_message = time.time()
 
+# Creates safety that checks how long ago last message was and stops if necessary
 class Safety(Thread):
     def __init__(self):
         Thread.__init__(self)
@@ -52,6 +53,7 @@ try:
         time_last_message = time.time() 
         if data["speed"] < -1 or data["speed"] > 1:
             controls.stop()
+            prev_throttle = 0
         else:
             controls.steer(data['steer'])
             #log.info(data["speed"])
@@ -60,5 +62,3 @@ try:
 except Exception as ex:
     print(str(ex))
     controls.stop()
-
-
