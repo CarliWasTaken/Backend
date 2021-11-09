@@ -11,9 +11,9 @@ class Servo():
         self.__delta_max = delta_max
         pass
 
-    def __del__(self):
+    '''def __del__(self):
         self.set_neutral()
-        pass
+        pass'''
 
     # sets the servo to its neutral value
     def set_neutral(self):
@@ -52,9 +52,9 @@ class AgentMoveController():
         self.__servoMin = 0
         pass
 
-    def __del__(self):
+    '''def __del__(self):
         self.reset_servos()
-        pass
+        pass'''
 
     # resets the Servos
     def reset_servos(self):
