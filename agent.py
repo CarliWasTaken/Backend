@@ -33,7 +33,7 @@ class Servo():
 
     # sets the servo to a specific value
     def set_value(self, value):
-        log.info(str(self.__number)  + ': ' + str(self.__neutral + value))
+        #log.info(str(self.__number)  + ': ' + str(self.__neutral + value))
         self.__pwm.set_pwm(self.__number, 0, self.__neutral + value)
         pass
 

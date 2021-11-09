@@ -9,6 +9,7 @@ localIP = "192.168.43.103"
 localPort = 20001
 bufferSize = 32
 
+
 # Create a datagram socket
 UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
@@ -20,7 +21,7 @@ log.info("UDP server up and listening")
 # Listen for incoming datagrams
 
 try:
-
+    prev_throttle = 0
     while(True):
         bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
         message = bytesAddressPair[0]
@@ -33,9 +34,9 @@ try:
         #log.move(data['speed'], data['steer'])
     
         controls.steer(data['steer'])
-        controls.drive(data['speed'])
+        log.info(data["speed"])
+        prev_throttle = controls.drive(data['speed'], prev_throttle)
 
-except KeyboardInterrupt:
-    controls.drive(0)
-
-controls.drive(0)
+except:
+    print("interrupt")
+    controls.stop()
