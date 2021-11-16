@@ -4,8 +4,17 @@ import json
 import controls
 import time
 from threading import Thread
+import cv2
+import numpy as np
 
 time_last_message = time.time()
+
+'''def generate_data_point(camera, steer, speed):
+    success, frame = camera.read()
+    if success:
+        frame = np.array(frame)
+        print(frame.shape)'''
+
 
 # Creates safety that checks how long ago last message was and stops if necessary
 class Safety(Thread):
@@ -26,6 +35,7 @@ localIP = "192.168.43.103"
 localPort = 20001
 bufferSize = 32
 
+camera = cv2.VideoCapture(0)
 
 # Create a datagram socket
 UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
@@ -50,14 +60,15 @@ try:
         # Log the movement data
         #log.move(data['speed'], data['steer'])
     
+
         time_last_message = time.time() 
         if data["speed"] < -1 or data["speed"] > 1:
             controls.stop()
             prev_throttle = 0
         else:
             controls.steer(data['steer'])
-            #log.info(data["speed"])
             prev_throttle = controls.drive(data['speed'], prev_throttle)
+
 
 except Exception as ex:
     print(str(ex))

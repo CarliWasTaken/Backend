@@ -1,12 +1,13 @@
 from agent import AgentMoveController
 import time
+import cv2
 from log import Log
 
 agent = AgentMoveController()
 log = Log.get_instance()
 
 #practically acceleration, lower is slower
-max_throttle_increment = 0.05
+max_throttle_increment = 1
 
 
 # scales the data and activates the steering servo
