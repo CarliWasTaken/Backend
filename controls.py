@@ -6,7 +6,7 @@ agent = AgentMoveController()
 log = Log.get_instance()
 
 #practically acceleration, lower is slower
-max_throttle_increment = 0.01
+max_throttle_increment = 0.05
 
 
 # scales the data and activates the steering servo
@@ -15,7 +15,7 @@ def steer(angle):
         agent.servos["steering"].set_value(angle)
 
 # scales the data and activates the throttle servo
-def drive(throttle, prev_throttle):
+def drive(throttle, prev_throttle, record = False):
     if throttle >= 0:
         throttle = min(prev_throttle+max_throttle_increment, throttle)
     else:
