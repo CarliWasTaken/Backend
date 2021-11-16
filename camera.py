@@ -1,20 +1,24 @@
 import cv2
 
-def gen_frames(camera):
-    # read camera frame
-    success, frame = camera.read() 
-    print(frame)
-    if success:
-        ret, buffer = cv2.imencode('.jpg', frame)
-        frame = buffer.tobytes()
-        return (b'--frame\r\n'
-                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n') 
+class Camera:
+    _instance = None
 
+    def __init__(self):
+        raise RuntimeError('Call instance() instead')
 
-def stream():
-    camera = cv2.VideoCapture(0)
-    while True:
-        yield gen_frames(camera)
+    @classmethod
+    def instance(cls):
+        if cls._instance is None:
+            cls._instance = cls.__new__(cls)
+            cls._instance.cam = cv2.VideoCapture(0)
 
-if __name__ == '__main__':
+        return cls._instance
+
+    def get_frame(self):
+        ret, frame = self.cam.read()
+        return frame
+
+    def __del__(self):
+        self.cam.release()
+
     

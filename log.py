@@ -1,11 +1,12 @@
 import logging
 import sys
+from typing import *
 
 class Log:
-    __logger = None
+    __logger: Log = None
 
     @staticmethod
-    def get_instance():
+    def get_instance() -> Log:
         '''Gets the instance of the class Log
         
         Returns the static variable of the class Log or creates the instance
@@ -44,7 +45,7 @@ class Log:
         pass
 
     # sets the current logging value
-    def set_console_log_level(self, level):
+    def set_console_log_level(self, level: int) -> None:
         '''Sets the logging level for the console
 
         This method is provided with a level by the logging library
@@ -59,7 +60,7 @@ class Log:
         self.__stdout_handler.setLevel(level)
         pass
 
-    def set_file_log_level(self, level):
+    def set_file_log_level(self, level: int) -> None:
         '''Sets the logging level for the file
 
         This method is provided with a level by the logging library
@@ -74,7 +75,7 @@ class Log:
         self.__file_handler.setLevel(level)
         pass
 
-    def debug(self, message):
+    def debug(self, message: str) -> None:
         '''Creates a debug log
 
         Logs the message on the console or a file if the log level is
@@ -89,7 +90,7 @@ class Log:
         self.__logger.deb
         pass
 
-    def info(self, message):
+    def info(self, message: str) -> None:
         '''Creates an info log
 
         Logs the message on the console or a file if the log level is
@@ -103,7 +104,7 @@ class Log:
         self.__logger.info(message)
         pass
 
-    def warning(self, message):
+    def warning(self, message: str) -> None:
         '''Creates a warning log
 
         Logs the message on the console or a file if the log level is
@@ -117,7 +118,7 @@ class Log:
         self.__logger.warning(message)
         pass
 
-    def error(self, error):
+    def error(self, error: str) -> None:
         '''Creates an error log
 
         Logs the corresponding excpetion to the console or a file if
@@ -131,7 +132,7 @@ class Log:
         self.__logger.error(error)
         pass
 
-    def critical(self, message):
+    def critical(self, message: str) -> None:
         '''Creates a critical log
 
         Logs the message on the console or a file if the log level is
@@ -143,8 +144,9 @@ class Log:
             message that should be present in the log
         '''
         self.__logger.critical(message)
+        pass
 
-    def move(self, x, y):
+    def move(self, x: int, y: int) -> None:
         '''Creates an movement info log
 
         Logs the currenct speed and angel of the car to the
@@ -158,3 +160,4 @@ class Log:
             steering value of the car
         '''
         self.info(f'Speed: {x}, Angel: {y}')
+        pass

@@ -9,7 +9,6 @@ log = Log.get_instance()
 #practically acceleration, lower is slower
 max_throttle_increment = 1
 
-
 # scales the data and activates the steering servo
 def steer(angle):
         angle = int(300*angle)
