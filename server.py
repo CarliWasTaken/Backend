@@ -6,6 +6,10 @@ from car.safety import Safety
 from cam.camera import Camera
 import numpy as np
 import time
+from datetime import datetime
+import os
+import cv2
+
 
 
 class Server:
@@ -39,7 +43,15 @@ class Server:
         self.UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
         self.UDPServerSocket.bind((self._localIP, self._localPort))
         self.log.info("UDP server up and listening")
+        path = None
+        if self._collect_training_data:
+            self.log.info("Collecting training data")
+            now = datetime.now()
+            d = now.strftime("%m-%d-%YT%H:%M:%S")
+            path = f"/home/pi/Backend/data/{d}/"
+            os.mkdir(path)
         
+        print("here0")
         # Listen for incoming datagrams
         prev_throttle = 0
         counter = 0
@@ -51,18 +63,20 @@ class Server:
                 self.controller.stop()
                 prev_throttle = 0
             else:
-                # Send command to steer and drive
+                # Send comnd to steer and drive
                 self.controller.steer(data['steer'])
                 prev_throttle = self.controller.drive(data['speed'], prev_throttle)
-                if self._collect_training_data and counter%50==0:
+                if self._collect_training_data and counter%10==0:
                     #self.camera.get_frame()
-                    frame = np.array(self.camera.get_frame())
-                    label = np.array((data['steer'], data['speed']))
-                    #print(frame)
-                    #print(label)
-                    self.images.append(frame)
-                    self.labels.append(label)
-                    
+                    print("here")
+                    frame = self.camera.get_frame()
+                    label = data['steer']
+                    dt = datetime.now()
+                    im_path = path+f"{dt}_{label}.jpg"
+                    print(im_path)
+                    cv2.imwrite(im_path, frame)
+
+
                 counter += 1
 
 
@@ -86,8 +100,7 @@ if __name__ == '__main__':
     server = Server.instance()
     try:
         server.start()
-    except:
+    except Exception as e:
+        print(e)
         server.controller.stop()
-        np.save('data/images.npy', server.images)
-        np.save('data/labels.npy', server.labels)
         server.stop()
