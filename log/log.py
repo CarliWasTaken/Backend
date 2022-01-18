@@ -35,7 +35,7 @@ class Log:
         self.__stdout_handler.setLevel(logging.DEBUG)
 
         # file logging
-        self.__file_handler = logging.FileHandler('logs.log')
+        self.__file_handler = logging.FileHandler('log/logs.log')
         self.__file_handler.setFormatter(self.__formatter)
         self.__file_handler.setLevel(logging.DEBUG)
 

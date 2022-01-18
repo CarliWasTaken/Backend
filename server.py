@@ -10,15 +10,14 @@ from datetime import datetime
 import os
 import cv2
 
-
-
 class Server:
     # Config for the server
     _instance = None
-    _localIP = "192.168.43.103"
+    #_localIP = "192.168.43.103"
+    _localIP = "127.0.0.1"
     _localPort = 20001
     _bufferSize = 32
-    _collect_training_data = True
+    _collect_training_data = False
 
     def __init__(self):
         raise RuntimeError('Call instance() instead')
@@ -32,7 +31,7 @@ class Server:
             cls._instance.camera = Camera.instance()
             cls._instance.safety = Safety.instance()
             cls._instance.images = []
-            cls._instance.labels = [] # [(steer, speed)]
+            cls._instance.labels = []
 
 
         return cls._instance
@@ -51,32 +50,35 @@ class Server:
             path = f"/home/pi/Backend/data/{d}/"
             os.mkdir(path)
         
-        print("here0")
         # Listen for incoming datagrams
         prev_throttle = 0
         counter = 0
         while True:
             data = self.receive_data()
             # Check if data is in bounds
-            if data["speed"] < -1 or data["speed"] > 1:
+            if data["speed"] == 123:
+                frame = self.camera.get_frame()
+                speed = 0.3
+                steer = 0#nn.predict(frame)
+                self.controller.steer(steer)
+                prev_throttle = self.controller.drive(speed, prev_throttle)
+                continue
+
+            elif data["speed"] < -1 or data["speed"] > 1:
                 # Stop the car if not
                 self.controller.stop()
                 prev_throttle = 0
             else:
-                # Send comnd to steer and drive
+                # Send command to steer and drive
                 self.controller.steer(data['steer'])
                 prev_throttle = self.controller.drive(data['speed'], prev_throttle)
                 if self._collect_training_data and counter%10==0:
-                    #self.camera.get_frame()
-                    print("here")
                     frame = self.camera.get_frame()
                     label = data['steer']
                     dt = datetime.now()
                     im_path = path+f"{dt}_{label}.jpg"
                     print(im_path)
                     cv2.imwrite(im_path, frame)
-
-
                 counter += 1
 
 
