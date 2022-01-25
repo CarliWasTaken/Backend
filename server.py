@@ -18,7 +18,9 @@ class Server:
     _localIP = "127.0.0.1"
     _localPort = 20001
     _bufferSize = 32
-    _collect_training_data = False
+    _collect_training_data = True
+    # Higher is less often
+    _collect_training_data_freq = 10
 
     def __init__(self):
         raise RuntimeError('Call instance() instead')
@@ -48,8 +50,10 @@ class Server:
         if self._collect_training_data:
             self.log.info("Collecting training data")
             now = datetime.now()
-            d = now.strftime("%m-%d-%YT%H:%M:%S")
-            path = f"/home/pi/Backend/data/{d}/"
+            d = now.strftime("%Y%m%dT%H%M%S")
+            #path = f"/home/pi/Backend/data/{d}/"
+            path = "C:\\Users\\10jon\\Desktop\\Carli\\Backend\\data\\"
+            path += d+"\\"
             os.mkdir(path)
         
         # Listen for incoming datagrams
@@ -61,7 +65,7 @@ class Server:
             if data["speed"] == 123:
                 frame = self.camera.get_frame()
                 speed = 0.3
-                steer = self.nn.query(frame)[0][0]
+                steer = 0#self.nn.query(frame)[0][0]
                 self.controller.steer(steer)
                 prev_throttle = self.controller.drive(speed, prev_throttle)
                 continue
@@ -74,11 +78,10 @@ class Server:
                 # Send command to steer and drive
                 self.controller.steer(data['steer'])
                 prev_throttle = self.controller.drive(data['speed'], prev_throttle)
-                if self._collect_training_data and counter%10==0:
+                if self._collect_training_data and counter%self._collect_training_data_freq==0:
                     frame = self.camera.get_frame()
                     label = data['steer']
-                    dt = datetime.now()
-                    im_path = path+f"{dt}_{label}.jpg"
+                    im_path = path+f"{counter/self._collect_training_data_freq}_{label}.jpg"
                     print(im_path)
                     cv2.imwrite(im_path, frame)
                 counter += 1

@@ -68,8 +68,6 @@ class CustomNeuralNetwork:
         # aufdrösseln der input_list in etwas brauchbares
         inputs = np.array(input_list, ndmin=2).T
 
-        print(self.w_input_hidden.shape)
-        print(inputs.shape)
         # X(h) = I * W(i-h)
         h_inputs = np.dot(self.w_input_hidden, inputs)
         # O(h) = sigmoid(X(h)) 
