@@ -9,6 +9,7 @@ import time
 from datetime import datetime
 import os
 import cv2
+from nn.custom_neural_network import CustomNeuralNetwork
 
 class Server:
     # Config for the server
@@ -32,6 +33,7 @@ class Server:
             cls._instance.safety = Safety.instance()
             cls._instance.images = []
             cls._instance.labels = []
+            cls._instance.nn = CustomNeuralNetwork.import_neural_net("nn/network_data/neuralnet.npy")
 
 
         return cls._instance
@@ -59,7 +61,7 @@ class Server:
             if data["speed"] == 123:
                 frame = self.camera.get_frame()
                 speed = 0.3
-                steer = 0#nn.predict(frame)
+                steer = self.nn.query(frame)[0][0]
                 self.controller.steer(steer)
                 prev_throttle = self.controller.drive(speed, prev_throttle)
                 continue
