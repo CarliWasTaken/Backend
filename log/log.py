@@ -87,7 +87,6 @@ class Log:
             message that should be present in the log
         '''
         self.__logger.debug(message)
-        self.__logger.deb
         pass
 
     def info(self, message: str) -> None:
