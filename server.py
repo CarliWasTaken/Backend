@@ -14,8 +14,8 @@ from nn.custom_neural_network import CustomNeuralNetwork
 class Server:
     # Config for the server
     _instance = None
-    #_localIP = "192.168.43.103"
-    _localIP = "127.0.0.1"
+    _localIP = "192.168.43.103"
+    #_localIP = "127.0.0.1"
     _localPort = 20001
     _bufferSize = 32
     _collect_training_data = True
@@ -52,8 +52,11 @@ class Server:
             now = datetime.now()
             d = now.strftime("%Y%m%dT%H%M%S")
             #path = f"/home/pi/Backend/data/{d}/"
-            path = "C:\\Users\\10jon\\Desktop\\Carli\\Backend\\data\\"
-            path += d+"\\"
+            #path = "C:\\Users\\10jon\\Desktop\\Carli\\Backend\\data\\"
+            #path += d+"\\"
+            path = "/home/pi/Backend/data/"
+            path += d+"/"
+            
             os.mkdir(path)
         
         # Listen for incoming datagrams
@@ -64,8 +67,9 @@ class Server:
             # Check if data is in bounds
             if data["speed"] == 123:
                 frame = self.camera.get_frame()
-                speed = 0.3
-                steer = 0#self.nn.query(frame)[0][0]
+                speed = 0.18
+                steer = self.nn.query(frame)[0][0]
+                steer = (steer-0.5)*2
                 self.controller.steer(steer)
                 prev_throttle = self.controller.drive(speed, prev_throttle)
                 continue
@@ -109,5 +113,6 @@ if __name__ == '__main__':
         server.start()
     except Exception as e:
         print(e)
+        print("HEREE")
         server.controller.stop()
         server.stop()

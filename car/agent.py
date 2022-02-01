@@ -44,6 +44,8 @@ class Servo():
         value
             corresponding value
         '''
+        if(self.__number == 8):
+            log.info(f"Throttle: {value}")
         self.__pwm.set_pwm(self.__number, 0, self.__neutral + value)
         pass
 
