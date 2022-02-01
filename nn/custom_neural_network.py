@@ -2,11 +2,7 @@ from typing import *
 
 import numpy as np
 import scipy.special
-import matplotlib.pyplot as plt
 import random
-
-# random.seed(1)
-# np.random.seed(1)
 
 class CustomNeuralNetwork:
     def __init__(self, input_nodes :int, hidden_nodes :int, output_nodes :int, learning_rate :float, weights :Tuple[np.ndarray, np.ndarray]=None):
@@ -118,14 +114,3 @@ class CustomNeuralNetwork:
             
             nn = CustomNeuralNetwork(input_nodes, hidden_nodes, output_nodes, learning_rate, weights=(w_input_hidden, w_hidden_output))
             return nn
-
-
-
-def get_training_and_test_indices(number_of_records, number_of_types=3, number_of_test_records_per_type=5):
-    start = number_of_records // number_of_types
-    training_indices = list(range(number_of_records))
-    test_indices = [training_indices[start*i:start*i+number_of_test_records_per_type] for i in range(number_of_types)]
-    test_indices = set([item for sublist in test_indices for item in sublist])
-    training_indices = list(set(training_indices) - test_indices)   
-    random.shuffle(training_indices)
-    return training_indices, list(test_indices)

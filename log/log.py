@@ -44,7 +44,6 @@ class Log:
         self.__logger.addHandler(self.__file_handler)
         pass
 
-    # sets the current logging value
     def set_console_log_level(self, level: int) -> None:
         '''Sets the logging level for the console
 

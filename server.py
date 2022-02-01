@@ -4,8 +4,6 @@ import json
 from car.controller import Controller
 from car.safety import Safety
 from cam.camera import Camera
-import numpy as np
-import time
 from datetime import datetime
 import os
 import cv2
@@ -37,7 +35,6 @@ class Server:
             cls._instance.labels = []
             cls._instance.nn = CustomNeuralNetwork.import_neural_net("nn/network_data/neuralnet.npy")
 
-
         return cls._instance
 
     # Start the server and listen for messages
@@ -47,24 +44,25 @@ class Server:
         self.UDPServerSocket.bind((self._localIP, self._localPort))
         self.log.info("UDP server up and listening")
         path = None
+
         if self._collect_training_data:
             self.log.info("Collecting training data")
+
             now = datetime.now()
             d = now.strftime("%Y%m%dT%H%M%S")
-            #path = f"/home/pi/Backend/data/{d}/"
-            #path = "C:\\Users\\10jon\\Desktop\\Carli\\Backend\\data\\"
-            #path += d+"\\"
-            path = "/home/pi/Backend/data/"
-            path += d+"/"
-            
+
+            path = f'{os.getcwd()}{os.sep}data{os.sep}{d}{os.sep}'
             os.mkdir(path)
         
-        # Listen for incoming datagrams
         prev_throttle = 0
         counter = 0
+
+        # Listen for incoming datagrams
         while True:
             data = self.receive_data()
+
             # Check if data is in bounds
+            # AI mode
             if data["speed"] == 123:
                 frame = self.camera.get_frame()
                 speed = 0.18
@@ -74,20 +72,23 @@ class Server:
                 prev_throttle = self.controller.drive(speed, prev_throttle)
                 continue
 
-            elif data["speed"] < -1 or data["speed"] > 1:
-                # Stop the car if not
-                self.controller.stop()
-                prev_throttle = 0
-            else:
+            elif -1 <= data["speed"] <= 1:
                 # Send command to steer and drive
                 self.controller.steer(data['steer'])
                 prev_throttle = self.controller.drive(data['speed'], prev_throttle)
+
                 if self._collect_training_data and counter%self._collect_training_data_freq==0:
                     frame = self.camera.get_frame()
                     label = data['steer']
                     im_path = path+f"{counter/self._collect_training_data_freq}_{label}.jpg"
                     print(im_path)
                     cv2.imwrite(im_path, frame)
+
+            else:
+                # Stop the car if not
+                self.controller.stop()
+                prev_throttle = 0
+                    
                 counter += 1
 
 
@@ -112,7 +113,6 @@ if __name__ == '__main__':
     try:
         server.start()
     except Exception as e:
-        print(e)
-        print("HEREE")
         server.controller.stop()
         server.stop()
+        server.log.error(e)

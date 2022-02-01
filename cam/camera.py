@@ -1,7 +1,4 @@
 import cv2
-import time
-import numpy as np
-import matplotlib as mpl
 
 class Camera:
     _instance = None
