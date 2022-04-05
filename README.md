@@ -14,9 +14,9 @@ python server.py
 ```
 
 ## Server
-
+The entrypoint is `server.py`. This creates a UDP Socket.
 ### Structure
-The entrypoint is `server.py`. This creates a UDP Socket which listens on `20001`. The messages that come frome the frontend have the following structure:
+ The messages that come frome the frontend have the following structure:
 ```
 {
   "steer": x, 
